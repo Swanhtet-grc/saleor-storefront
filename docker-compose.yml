@@ -42,32 +42,7 @@ services:
     command: npm start -- --host 0.0.0.0
 
 
-  worker:
-    build:
-      context: ./saleor
-      dockerfile: ./Dockerfile
-      args:
-        STATIC_URL: '/static/'
-    command: celery -A saleor worker --app=saleor.celeryconf:app --loglevel=info
-    restart: unless-stopped
-    networks:
-      - saleor-backend-tier
-    env_file: common.env
-    depends_on:
-      - redis
-    volumes:
-      - ./saleor/saleor/:/app/saleor:Z,cached
-      - ./saleor/templates/:/app/templates:Z,cached
-      # shared volume between worker and api for media
-      - saleor-media:/app/media
 
-
-volumes:
-  saleor-db:
-    driver: local
-  saleor-redis:
-    driver: local
-  saleor-media:
 
 networks:
   saleor-backend-tier:
