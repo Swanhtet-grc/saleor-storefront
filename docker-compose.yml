@@ -22,20 +22,28 @@ services:
       - STOREFRONT_URL=http://localhost:3000/
       - DASHBOARD_URL=http://localhost:9000/
 
-  storefront:
+  worker:
     build:
-      context: ./saleor-storefront
+      context: .
       dockerfile: ./Dockerfile.dev
-    ports:
-      - 3000:3000
-    restart: unless-stopped
-    volumes:
-      - ./saleor-storefront/:/app:cached
-      - /app/node_modules/
+      args:
+        STATIC_URL: '/static/'
     command: npm start -- --host 0.0.0.0
+    restart: unless-stopped
+    networks:
+      - saleor-backend-tier
+    env_file: common.env
+    volumes:
+      - ./:/app:cached
+      - /app/node_modules/
 
 
-
+volumes:
+  saleor-db:
+    driver: local
+  saleor-redis:
+    driver: local
+  saleor-media:
 
 networks:
   saleor-backend-tier:
