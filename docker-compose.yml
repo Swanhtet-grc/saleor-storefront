@@ -13,8 +13,9 @@ services:
     networks:
       - saleor-backend-tier
     volumes:
-      - ./saleor-storefront/:/app:cached
+      - ./:/app:cached
       - /app/node_modules/
+      - saleor-media:/app/media
     command: npm start -- --host 0.0.0.0
     env_file: common.env
     environment:
@@ -28,15 +29,15 @@ services:
       dockerfile: ./Dockerfile.dev
       args:
         STATIC_URL: '/static/'
-    command: npm start -- --host 0.0.0.0
     restart: unless-stopped
     networks:
       - saleor-backend-tier
+    command: npm start -- --host 0.0.0.0
     env_file: common.env
     volumes:
       - ./:/app:cached
       - /app/node_modules/
-
+      - saleor-media:/app/media
 
 volumes:
   saleor-db:
@@ -47,4 +48,4 @@ volumes:
 
 networks:
   saleor-backend-tier:
-    driver: bridge
+          driver : bridge
